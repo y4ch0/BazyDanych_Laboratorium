@@ -1,0 +1,4 @@
+Lubię placki ziemniaczane
+
+for i in range(10):
+    print(f"{i}. UWM")
