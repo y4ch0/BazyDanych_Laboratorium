@@ -1,0 +1,91 @@
+10:25:55	CREATE TABLE pracownik(  id_pracownika INT PRIMARY KEY AUTO_INCREMENT NOT NULL,  imie VARCHAR(40) NOT NULL,     nazwisko VARCHAR(60) NOT NULL,     data_urodzenia DATE NOT NULL )	0 row(s) affected	0.922 sec
+
+10:26:08	SELECT * FROM pracownik LIMIT 0, 1000	0 row(s) returned	0.516 sec / 0.000 sec
+
+10:28:09	INSERT INTO pracownik VALUES  (NULL,"Adam","Abacki","2000-10-12"), (NULL,"Barbara","Babacka","1992-03-03"), (NULL,"Cyprian","Cabacki","2006-03-02")	3 row(s) affected Records: 3  Duplicates: 0  Warnings: 0	0.015 sec
+
+10:28:15	SELECT * FROM pracownik LIMIT 0, 1000	3 row(s) returned	0.000 sec / 0.000 sec
+
+10:28:49	UPDATE pracownik SET data_urodzenia = "1992-03-04" WHERE id_pracownika = 2	1 row(s) affected Rows matched: 1  Changed: 1  Warnings: 0	0.000 sec
+
+10:28:58	SELECT * FROM pracownik LIMIT 0, 1000	3 row(s) returned	0.000 sec / 0.000 sec
+
+10:31:28	CREATE TABLE zadanie(  id_zadania INT PRIMARY KEY NOT NULL AUTO_INCREMENT,     nazwa_zadania VARCHAR(150) NOT NULL,     priorytet ENUM("niski","normalny","wysoki") NOT NULL,     opis TEXT,     CONSTRAINT fk_pracownik FOREIGN KEY (pracownik)     REFERENCES pracownik(id_pracownika)     ON DELETE SET NULL )	Error Code: 1072. Key column 'pracownik' doesn't exist in table	0.000 sec
+
+10:32:39	CREATE TABLE zadanie(  id_zadania INT PRIMARY KEY NOT NULL AUTO_INCREMENT,     nazwa_zadania VARCHAR(150) NOT NULL,     priorytet ENUM("niski","normalny","wysoki") NOT NULL,     opis TEXT,     pracownik INT NULL,     CONSTRAINT fk_zadanie_pracownik         FOREIGN KEY (pracownik)         REFERENCES pracownik(id_pracownika)         ON DELETE SET NULL )	0 row(s) affected	0.563 sec
+
+10:33:52	ALTER TABLE zadanie ALTER priorytet SET DEFAULT "normalny"	0 row(s) affected Records: 0  Duplicates: 0  Warnings: 0	0.188 sec
+
+10:35:01	INSERT INTO zadanie VALUES (NULL,"Przygotowanie raportu kwartalnego","normalny",NULL,1), (NULL,"Przeszkolenie praktykanta","wysoki",NULL,2), (NULL,"Naprawa drukarki","niski",NULL,3)	3 row(s) affected Records: 3  Duplicates: 0  Warnings: 0	0.000 sec
+
+10:35:06	SELECT * FROM zadanie LIMIT 0, 1000	3 row(s) returned	0.000 sec / 0.000 sec
+
+10:36:10	CREATE TABLE projekt(  id_projektu INT PRIMARY KEY NOT NULL AUTO_INCREMENT,     nazwa_projektu VARCHAR(150) NOT NULL,     data_rozpoczecia DATE NOT NULL,     data_zakonczenia DATE )	0 row(s) affected	0.219 sec
+
+10:39:15	ALTER TABLE projekt ADD menadzer_projektu INT NOT NULL, ADD CONSTRAINT FOREIGN KEY (pracownik) REFERENCES pracownik(pracownik_id)	Error Code: 1072. Key column 'pracownik' doesn't exist in table	0.266 sec
+
+10:39:47	ALTER TABLE projekt ADD menadzer_projektu INT NOT NULL, ADD CONSTRAINT fk_menadzer_projekt FOREIGN KEY (menadzer_projektu) REFERENCES pracownik(pracownik_id)	Error Code: 3734. Failed to add the foreign key constraint. Missing column 'pracownik_id' for constraint 'fk_menadzer_projekt' in the referenced table 'pracownik'	0.000 sec
+
+10:39:57	ALTER TABLE projekt ADD menadzer_projektu INT NOT NULL, ADD CONSTRAINT FOREIGN KEY (menadzer_projektu) REFERENCES pracownik(pracownik_id)	Error Code: 3734. Failed to add the foreign key constraint. Missing column 'pracownik_id' for constraint 'projekt_ibfk_1' in the referenced table 'pracownik'	0.000 sec
+
+10:40:16	ALTER TABLE projekt ADD menadzer_projektu INT NOT NULL, ADD CONSTRAINT FOREIGN KEY (menadzer_projektu) REFERENCES pracownik(id_pracownika)	0 row(s) affected Records: 0  Duplicates: 0  Warnings: 0	0.344 sec
+
+10:41:34	INSERT INTO projekt VALUES (NULL,"Panel administracyjny - logowanie","2026-11-09",NULL,1), (NULL,"Widok statystyk w panelu administracyjnym","2026-10-05","2026-10-26",2)	2 row(s) affected Records: 2  Duplicates: 0  Warnings: 0	0.016 sec
+
+10:41:39	SELECT * FROM projekt LIMIT 0, 1000	2 row(s) returned	0.000 sec / 0.000 sec
+
+10:43:49	ALTER TABLE zadanie ADD projekt INT, ADD CONSTRAINT FOREIGN KEY (projekt) REFERENCES projekt(id_projektu) ON DELETE CASCADE	3 row(s) affected Records: 3  Duplicates: 0  Warnings: 0	0.313 sec
+
+10:45:08	UPDATE zadanie SET projekt=1 WHERE id_zadania = 1	1 row(s) affected Rows matched: 1  Changed: 1  Warnings: 0	0.000 sec
+
+10:45:13	UPDATE zadanie SET projekt=2 WHERE id_zadania = 2	1 row(s) affected Rows matched: 1  Changed: 1  Warnings: 0	0.000 sec
+
+10:45:20	SELECT * FROM zadanie LIMIT 0, 1000	3 row(s) returned	0.000 sec / 0.000 sec
+
+10:51:19	CREATE TABLE sprint(  id_sprintu INT NOT NULL PRIMARY KEY AUTO_INCREMENT,     numer_sprintu INT UNSIGNED NOT NULL,     data_rozpoczecia DATE NOT NULL,     data_zakonczenia DATE NOT NULL )	0 row(s) affected	0.250 sec
+
+10:51:54	ALTER TABLE zadanie ADD sprint INT, ADD CONSTRAINT FOREIGN KEY (sprint) REFERENCES sprint(id_sprintu)	3 row(s) affected Records: 3  Duplicates: 0  Warnings: 0	0.265 sec
+
+10:53:34	ALTER TABLE zadanie DROP FOREIGN KEY sprint	Error Code: 1091. Can't DROP 'sprint'; check that column/key exists	0.000 sec
+
+10:54:03	ALTER TABLE zadanie DROP FOREIGN KEY fk_zadanie_sprint	Error Code: 1091. Can't DROP 'fk_zadanie_sprint'; check that column/key exists	0.000 sec
+
+10:54:22	ALTER TABLE zadanie DROP FOREIGN KEY zadanie_ibfk_2	0 row(s) affected Records: 0  Duplicates: 0  Warnings: 0	0.047 sec
+
+10:54:31	ALTER TABLE zadanie ADD CONSTRAINT fk_zadanie_sprint FOREIGN KEY (sprint) REFERENCES sprint(id_sprintu) ON DELETE SET NULL	3 row(s) affected Records: 3  Duplicates: 0  Warnings: 0	0.266 sec
+
+10:54:51	SHOW CREATE TABLE zadanie	1 row(s) returned	0.000 sec / 0.000 sec
+
+10:55:33	INSERT INTO sprint VALUES(NULL,1,"2026-11-09","2026-11-16")	1 row(s) affected	0.016 sec
+
+10:55:54	UPDATE zadania SET sprint=1 WHERE id_zadania IN (2,3)	Error Code: 1146. Table 'infio_ciaka.zadania' doesn't exist	0.000 sec
+
+10:56:12	UPDATE zadanie SET sprint=1 WHERE id_zadania IN (2,3)	2 row(s) affected Rows matched: 2  Changed: 2  Warnings: 0	0.000 sec
+
+10:56:23	SELECT * FROM zadanie LIMIT 0, 1000	3 row(s) returned	0.000 sec / 0.000 sec
+
+10:56:59	CREATE TABLE status(  id_statusu INT PRIMARY KEY NOT NULL AUTO_INCREMENT,     nazwa_statusu VARCHAR(20) )	0 row(s) affected	0.125 sec
+
+10:57:46	INSERT INTO status VALUES (NULL,"status1"), (NULL,"status2"), (NULL,"status3")	3 row(s) affected Records: 3  Duplicates: 0  Warnings: 0	0.047 sec
+
+10:58:59	CREATE TABLE zadanie_has_status(  id_zdarzenia INT PRIMARY KEY NOT NULL AUTO_INCREMENT,     id_zadania INT NOT NULL,     id_statusu INT NOT NULL,     data_zdarzenia TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP )	0 row(s) affected	0.234 sec
+
+10:59:48	INSERT INTO zadanie_has_status VALUES (NULL,1,1,NULL), (NULL,2,1,NULL), (NULL,3,2,NULL)	Error Code: 1048. Column 'data_zdarzenia' cannot be null	0.468 sec
+
+11:01:23	INSERT INTO zadanie_has_status () VALUES (NULL,1,1,DEFAULT), (NULL,2,1,DEFAULT), (NULL,3,2,DEFAULT)	3 row(s) affected Records: 3  Duplicates: 0  Warnings: 0	0.000 sec
+
+11:01:34	SELECT * FROM zadanie_has_status LIMIT 0, 1000	3 row(s) returned	0.000 sec / 0.000 sec
+
+11:02:00	DELETE FROM projekt WHERE id_projektu=1	1 row(s) affected	0.156 sec
+
+11:02:10	SELECT * FROM zadanie LIMIT 0, 1000	2 row(s) returned	0.000 sec / 0.000 sec
+
+11:02:21	DROP TABLE sprint	Error Code: 3730. Cannot drop table 'sprint' referenced by a foreign key constraint 'fk_zadanie_sprint' on table 'zadanie'.	0.000 sec
+
+11:03:18	SELECT * FROM infio_ciaka.zadanie_has_status LIMIT 0, 1000	3 row(s) returned	0.000 sec / 0.000 sec
+
+11:05:31	ALTER TABLE zadanie DROP FOREIGN KEY fk_zadanie_sprint	0 row(s) affected Records: 0  Duplicates: 0  Warnings: 0	0.047 sec
+
+11:05:34	DROP TABLE sprint	0 row(s) affected	0.047 sec
+
+11:10:33	SHOW CREATE TABLE zadanie	1 row(s) returned	0.000 sec / 0.000 sec
