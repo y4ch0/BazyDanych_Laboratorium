@@ -1,0 +1,77 @@
+09:53:02	USE infio_ciaka	0 row(s) affected	0.000 sec
+
+09:53:06	ALTER TABLE zadanie DROP FOREIGN KEY pracownik, DROP COLUMN pracownik	Error Code: 1828. Cannot drop column 'pracownik': needed in a foreign key constraint 'fk_zadanie_pracownik'	0.047 sec
+
+09:53:25	ALTER TABLE zadanie DROP FOREIGN KEY fk_zadanie_pracownik, DROP COLUMN pracownik	0 row(s) affected Records: 0  Duplicates: 0  Warnings: 0	0.594 sec
+
+09:53:55	SHOW CREATE TABLE projekt	1 row(s) returned	0.093 sec / 0.000 sec
+
+09:54:40	ALTER TABLE projekt DROP FOREIGN KEY projekt_ibfk_1	0 row(s) affected Records: 0  Duplicates: 0  Warnings: 0	0.250 sec
+
+09:55:01	ALTER TABLE pracownik DROP PRIMARY KEY	Error Code: 1075. Incorrect table definition; there can be only one auto column and it must be defined as a key	0.062 sec
+
+09:55:44	SHOW CREATE TABLE pracownik	1 row(s) returned	0.000 sec / 0.000 sec
+
+09:56:03	ALTER TABLE pracownik DROP PRIMARY KEY id_pracownika	Error Code: 1064. You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'id_pracownika' at line 1	0.000 sec
+
+09:56:09	ALTER TABLE pracownik DROP PRIMARY KEY	Error Code: 1075. Incorrect table definition; there can be only one auto column and it must be defined as a key	0.000 sec
+
+09:57:03	SHOW CREATE TABLE pracownik	1 row(s) returned	0.000 sec / 0.000 sec
+
+09:58:00	ALTER TABLE pracownik MODIFY COLUMN id_pracownika INT NOT NULL	3 row(s) affected Records: 3  Duplicates: 0  Warnings: 0	0.329 sec
+
+09:58:09	ALTER TABLE pracownik DROP PRIMARY KEY	3 row(s) affected Records: 3  Duplicates: 0  Warnings: 0	0.172 sec
+
+09:59:37	ALTER TABLE pracownik MODIFY COLUMN id_pracownika INT AUTO_INCREMENT PRIMARY KEY	3 row(s) affected Records: 3  Duplicates: 0  Warnings: 0	0.187 sec
+
+10:00:34	SHOW CREATE TABLE zadanie	1 row(s) returned	0.063 sec / 0.000 sec
+
+10:00:48	SHOW CREATE TABLE projekt	1 row(s) returned	0.000 sec / 0.000 sec
+
+10:02:21	ALTER TABLE zadanie ADD COLUMN pracownik INT, ADD CONSTRAINT FOREIGN KEY (pracownik) REFERENCES pracownik(id_pracownika) ON DELETE SET NULL	2 row(s) affected Records: 2  Duplicates: 0  Warnings: 0	0.453 sec
+
+10:02:34	SELECT pracownik FROM `infio_ciaka`.`zadanie` LIMIT 0, 1000	2 row(s) returned	0.000 sec / 0.000 sec
+
+10:04:26	ALTER TABLE projekt ADD CONSTRAINT FOREIGN KEY (menadzer_projektu) REFERENCES pracownik(id_pracownika)	1 row(s) affected Records: 1  Duplicates: 0  Warnings: 0	0.312 sec
+
+10:05:12	ALTER TABLE zadanie ADD COLUMN godziny_szacowane INT DEFAULT 8	0 row(s) affected Records: 0  Duplicates: 0  Warnings: 0	0.094 sec
+
+10:05:25	SELECT * FROM zadanie LIMIT 0, 1000	2 row(s) returned	0.000 sec / 0.000 sec
+
+10:05:42	UPDATE TABLE zadanie SET godziny_szacowane = 12 WHERE id_zadania = 3	Error Code: 1064. You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'TABLE zadanie SET godziny_szacowane = 12 WHERE id_zadania = 3' at line 1	0.000 sec
+
+10:05:49	UPDATE zadanie SET godziny_szacowane = 12 WHERE id_zadania = 3	1 row(s) affected Rows matched: 1  Changed: 1  Warnings: 0	0.000 sec
+
+10:05:57	SELECT * FROM zadanie LIMIT 0, 1000	2 row(s) returned	0.000 sec / 0.000 sec
+
+10:06:22	ALTER TABLE zadanie MODIFY COLUMN godziny_szacowane INT DEFAULT 6	0 row(s) affected Records: 0  Duplicates: 0  Warnings: 0	0.031 sec
+
+10:06:28	SELECT * FROM zadanie LIMIT 0, 1000	2 row(s) returned	0.016 sec / 0.000 sec
+
+10:07:35	INSERT INTO zadanie VALUES( NULL, "Przygotowanie raportu kwartalnego", "normalny", NULL, NULL, NULL, 1, DEFAULT )	1 row(s) affected	0.000 sec
+
+10:07:39	SELECT * FROM zadanie LIMIT 0, 1000	3 row(s) returned	0.000 sec / 0.000 sec
+
+10:08:07	DELETE FROM zadanie WHERE id_zadania = 4	1 row(s) affected	0.000 sec
+
+10:08:31	ALTER TABLE projekt ADD COLUMN opis_kratki VARCHAR(50)	0 row(s) affected Records: 0  Duplicates: 0  Warnings: 0	0.031 sec
+
+10:08:54	ALTER TABLE projekt MODIFY COLUMN opis_kratki VARCHAR(200)	1 row(s) affected Records: 1  Duplicates: 0  Warnings: 0	0.219 sec
+
+10:09:17	UPDATE projekt SET opis_kratki = "Testowy opis kratki" WHERE id_projektu = 2	1 row(s) affected Rows matched: 1  Changed: 1  Warnings: 0	0.016 sec
+
+10:09:23	SELECT * FROM projekt LIMIT 0, 1000	1 row(s) returned	0.000 sec / 0.000 sec
+
+10:09:53	ALTER TABLE projekt DROP COLUMN opis_kratki	0 row(s) affected Records: 0  Duplicates: 0  Warnings: 0	0.547 sec
+
+10:11:28	ALTER TABLE zadanie DROP CONSTRAINT projekt	Error Code: 3940. Constraint 'projekt' does not exist.	0.031 sec
+
+10:11:43	SHOW CREATE TABLE zadanie	1 row(s) returned	0.000 sec / 0.000 sec
+
+10:12:18	ALTER TABLE zadanie DROP CONSTRAINT zadanie_ibfk_1	0 row(s) affected Records: 0  Duplicates: 0  Warnings: 0	0.063 sec
+
+10:12:50	ALTER TABLE zadanie ADD CONSTRAINT FOREIGN KEY (projekt) REFERENCES projekt(id_projektu) ON DELETE SET NULL	2 row(s) affected Records: 2  Duplicates: 0  Warnings: 0	0.281 sec
+
+10:13:04	DELETE FROM projekt WHERE id_projektu = 2	1 row(s) affected	0.015 sec
+
+10:13:18	SELECT * FROM zadanie LIMIT 0, 1000	2 row(s) returned	0.000 sec / 0.000 sec
